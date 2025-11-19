@@ -22,12 +22,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 
 
 @Composable
-fun PantallaComprobante(navController: NavController) {
+fun PantallaComprobante(navController: NavController, dineroViewModel: DineroViewModel) {
     val monto = navController.previousBackStackEntry
         ?.savedStateHandle
         ?.get<String>("monto") ?: "0.00"
@@ -48,7 +49,6 @@ fun PantallaComprobante(navController: NavController) {
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
-
 
 //ACA VAN LOS DATOS DEL COMPROBANTE
 
@@ -88,14 +88,9 @@ fun PantallaComprobante(navController: NavController) {
 }
 
 
-
-
-
-
-
-
 @Preview(showBackground = true)
 @Composable
 fun PantallComprobantePreview() {
-    PantallaComprobante(navController = rememberNavController())
+    PantallaComprobante(navController = rememberNavController(),
+        dineroViewModel = viewModel())
 }

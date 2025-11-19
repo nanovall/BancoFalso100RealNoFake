@@ -4,9 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.bancofalso123_100realnofake.DineroViewModel
 import com.example.bancofalso123_100realnofake.ui.theme.BancoFalso123100RealNoFakeTheme
 
 
@@ -20,11 +22,29 @@ class MainActivity : ComponentActivity() {
 
                 val navController = rememberNavController()
 
-                NavHost(navController, startDestination = "1") {
-                    composable ( "1" ) { Home(navController) }
-                    composable ( "2" ) { PantallaComprobante(navController) }
-                }
+                val dineroViewModel: DineroViewModel = viewModel()
 
+
+                NavHost(navController, startDestination = "2") {
+                    composable(route = "1") {
+                        Deposito(
+                            navController = navController,
+                            dineroViewModel = dineroViewModel
+                        )
+                    }
+                    composable("2") {
+                        Home(
+                            navController = navController,
+                            dineroViewModel = dineroViewModel
+                        )
+                    }
+                    composable("3") {
+                        PantallaComprobante(
+                            navController = navController,
+                            dineroViewModel = dineroViewModel
+                        )
+                    }
+                }
             }
         }
     }

@@ -16,7 +16,6 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -33,13 +32,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 
-
 @Composable
-fun Home(navController: NavController, dineroViewModel: DineroViewModel) {
+fun Deposito(navController: NavController,dineroViewModel: DineroViewModel) {
+    var depositarplata by rememberSaveable { mutableStateOf("") }
     val saldo by dineroViewModel.saldoactual
-    var extraerplata by rememberSaveable { mutableStateOf("") }
-    var fecharetirada by remember { mutableStateOf("") }
-    var montoretirado by remember { mutableStateOf(0.0) }
+
+
 
     //ACA PONEMOS EL FONDO
     Box(
@@ -57,10 +55,10 @@ fun Home(navController: NavController, dineroViewModel: DineroViewModel) {
         //ACA PONEMOS EL DINERO ACTUAL
         Column(
             modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(top = 100.dp)
-                .background(Color.White, shape = RoundedCornerShape(15.dp))
-                .padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally
+                .align(Alignment.TopCenter).
+                padding(top = 100.dp).
+                background(Color.White, shape = RoundedCornerShape(15.dp)).
+                padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally
         )
 
         {
@@ -73,7 +71,9 @@ fun Home(navController: NavController, dineroViewModel: DineroViewModel) {
         }
 
 
-        //ACA PONEMOS EL DINERO A RETIRAR
+
+
+        //ACA PONEMOS EL DINERO A DEPOSITAR
         Column(
             modifier = Modifier
                 .align(Alignment.Center)
@@ -82,66 +82,53 @@ fun Home(navController: NavController, dineroViewModel: DineroViewModel) {
         )
         {
             Text(
-                text = "Dinero a Retirar?",
+                text = "Dinero a Depositar?",
                 fontSize = 17.sp,
                 fontWeight = FontWeight.Bold
             )
             TextField(
-                value = extraerplata,
-                onValueChange = { extraerplata = it },
+                value = depositarplata,
+                onValueChange = { depositarplata = it },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 colors = TextFieldDefaults.colors(
                     unfocusedTextColor = Color(0xFFEEEEEE),
                     focusedContainerColor = Color(0xFFF5F5F5),
                     focusedTextColor = Color.Black,
-                )
+                    )
             )
         }
 
-        //ACA EL BOTON DE RETIRAR
+        //EL BOTON DE Depositar
         Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 200.dp)
                 .background(Color.White, shape = RoundedCornerShape(15.dp))
-                .padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally
-        )
+                .padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally)
         {
             Button(
                 onClick = {
-                    val montoaretirar = extraerplata.toDoubleOrNull()
-                    if (montoaretirar != null && montoaretirar > 0 && montoaretirar <= saldo) {
+                    val montoadepositar = depositarplata.toDoubleOrNull()
+                    if (montoadepositar != null && montoadepositar > 0) {
 
-                        dineroViewModel.retirarDinero(montoaretirar)
+                        dineroViewModel.depositarDinero(montoadepositar)
 
-                        val montoreti = String.format("%.2f", montoaretirar)
-                        val fechareti = java.time.LocalDateTime.now()
-                            .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+                        val montoreti = String.format("%.2f", montoadepositar)
 
-
-                        navController.currentBackStackEntry
-                            ?.savedStateHandle
-                            ?.set("monto", montoreti)
-
-                        navController.currentBackStackEntry
-                            ?.savedStateHandle
-                            ?.set("fecha", fechareti)
-
-                        extraerplata = ""
-                        navController.navigate("3")
+                        depositarplata = ""
                     } else {
-                        ""
+                        "No es valido"
                     }
                 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Red,
+                    containerColor = Color.Gray,
                 ), shape = RoundedCornerShape(15.dp)
             ) {
-                Text(text = "Retirar", fontSize = 30.sp)
+                Text(text = "Depositar", fontSize = 30.sp)
             }
         }
 
-        //Boton para ir a depositar
+        //Boton para ir a Retirar
         Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -152,22 +139,25 @@ fun Home(navController: NavController, dineroViewModel: DineroViewModel) {
         {
             Button(
                 onClick = {
-                    navController.navigate("1")
+                    navController.navigate("2")
                 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Gray,
+                    containerColor = Color.Red,
                 ), shape = RoundedCornerShape(15.dp)
             ) {
-                Text(text = "Depositar", fontSize = 16.sp,)
+                Text(text = "Retirar", fontSize = 16.sp,)
             }
         }
+
+
+
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun HomePreview() {
-    Home (navController = rememberNavController(),
+fun DepositoPreview() {
+    Deposito (navController = rememberNavController(),
         dineroViewModel = viewModel()
     )
 }
