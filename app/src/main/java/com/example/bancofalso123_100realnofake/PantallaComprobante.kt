@@ -75,7 +75,7 @@ fun PantallaComprobante(navController: NavController) {
         {
             Button(
                 onClick = {
-                    navController.navigate("1")
+                    navController.popBackStack()
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Red,
